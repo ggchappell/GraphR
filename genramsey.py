@@ -57,6 +57,7 @@ extremals(f1, f2, b1, b2, printflag=None)
 
 import isograph   # for graphs, isomorphic, powerset, unique_iso
 import itertools  # for combinations, count
+import sys        # for argv, exit
 
 
 # ----------------------------------------------------------------------
@@ -371,13 +372,24 @@ def extremals(f1, f2, b1, b2, printflag=None):
 # ----------------------------------------------------------------------
 
 
-# Do doctests if run as script
-if __name__ == "__main__":
+def main(argv=None):
+    """Run doctests; verbose mode if argv[1] is "--Test"
+
+    """
+    if argv is None:
+        argv = sys.argv
+
     import doctest
-    verbose = False  # Set to True for verbose doctests
+    verbose = (len(argv) >= 2 and argv[1] == "--Test")
     if verbose:
         print "Running doctests (verbose mode)"
     else:
         print "Running doctests"
     doctest.testmod(verbose=verbose)
+    return 0
+
+
+# Execute main() if running as program, not if imported as module
+if __name__ == "__main__":
+    sys.exit(main())
 

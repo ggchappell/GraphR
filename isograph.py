@@ -2,7 +2,7 @@
 
 # isograph.py
 # Glenn G. Chappell
-# Date: 6 Jun 2015
+# Date: 25 Aug 2016
 # Requires Python 2.6.* or 2.7.*.
 
 """Functions for dealing with finite, simple graphs & graph isomorphism.
@@ -57,6 +57,7 @@ graphs_conn_iso(n)
 """
 
 import itertools  # for chain, combinations, islice, permutations
+import sys        # for argv, exit
 
 
 # ----------------------------------------------------------------------
@@ -658,13 +659,24 @@ def graphs_conn_iso(n):
 # ----------------------------------------------------------------------
 
 
-# Do doctests if run as script
-if __name__ == "__main__":
+def main(argv=None):
+    """Run doctests; verbose mode if argv[1] is "--Test"
+
+    """
+    if argv is None:
+        argv = sys.argv
+
     import doctest
-    verbose = False  # Set to True for verbose doctests
+    verbose = (len(argv) >= 2 and argv[1] == "--Test")
     if verbose:
         print "Running doctests (verbose mode)"
     else:
         print "Running doctests"
     doctest.testmod(verbose=verbose)
+    return 0
+
+
+# Execute main() if running as program, not if imported as module
+if __name__ == "__main__":
+    sys.exit(main())
 
