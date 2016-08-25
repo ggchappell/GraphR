@@ -17,7 +17,7 @@ Package repository: <https://github.com/ggchappell/GraphR>
 Copyright & License
 -------------------
 
-Package copyright &copy; 2013-2015 Glenn G. Chappell.
+Package copyright &copy; 2013-2016 Glenn G. Chappell.
 
 License: MIT. See [`LICENSE`](LICENSE) or
 <http://opensource.org/licenses/MIT>.

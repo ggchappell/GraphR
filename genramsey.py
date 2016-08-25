@@ -2,7 +2,7 @@
 
 # genramsey.py
 # Glenn G. Chappell
-# Date: 6 Jun 2015
+# Date: 25 Aug 2016
 # Requires Python 2.6.* or 2.7.*.
 
 """Functions for finding generalized Ramsey numbers & related extremal
@@ -151,6 +151,10 @@ def has_fset(f, b, g):
     See isograph.py for our graph representation.
 
     >>> g = [ [3], [3], [3], [0,1,2] ]
+    >>> has_fset(is_independent, -1, g)
+    False
+    >>> has_fset(is_independent, 0, g)
+    True
     >>> has_fset(is_independent, 1, g)
     True
     >>> has_fset(is_independent, 2, g)
@@ -167,16 +171,16 @@ def has_fset(f, b, g):
     False
 
     """
-    # About "try": In early 2.6.* Python, itertools.combinations(n, r)
-    # raises ValueError when r > n, instead of merely yielding no
-    # results. In order to deal with this, with minimal performance
-    # penalty on later Python versions, we do try .. except.
-    try:
-        for s in itertools.combinations(xrange(len(g)), b):
-            if f(g, s):
-                return True
-    except ValueError:
-        pass
+    if b < 0:
+        return False
+
+    n = len(g)
+    if b > n:
+        return False
+
+    for s in itertools.combinations(xrange(n), b):
+        if f(g, s):
+            return True
     return False
 
 
@@ -193,6 +197,10 @@ def has_fset_with_last(f, b, g):
     See isograph.py for our graph representation.
 
     >>> g = [ [3], [3], [3], [0,1,2] ]
+    >>> has_fset_with_last(is_independent, -1, g)
+    False
+    >>> has_fset_with_last(is_independent, 0, g)
+    False
     >>> has_fset_with_last(is_independent, 1, g)
     True
     >>> has_fset_with_last(is_independent, 2, g)
@@ -213,17 +221,13 @@ def has_fset_with_last(f, b, g):
         return False
 
     n = len(g)
-    # About "try": In early 2.6.* Python, itertools.combinations(n, r)
-    # raises ValueError when r > n, instead of merely yielding no
-    # results. In order to deal with this, with minimal performance
-    # penalty on later Python versions, we do try .. except.
-    try:
-        for ss in itertools.combinations(xrange(n-1), b-1):
-            s = ss + (n-1,)
-            if f(g, s):
-                return True
-    except ValueError:
-        pass
+    if b > n:
+        return False
+
+    for ss in itertools.combinations(xrange(n-1), b-1):
+        s = ss + (n-1,)
+        if f(g, s):
+            return True
     return False
 
 
