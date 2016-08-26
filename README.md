@@ -26,7 +26,8 @@ Usage
 -----
 
 In its current form, GraphR requires that the user be at least somewhat
-familiar with Python and use of the command line (*ix shell or similar).
+familiar with Python and/or a Unix-derived shell or similar command-line
+interface.
 
 GraphR consists of two executable programs (`sparseramsey.py`,
 `dividedramsey.py`) and two importable libraries used by these
