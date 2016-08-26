@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # isograph.py
 # Glenn G. Chappell
-# Date: 25 Aug 2016
-# Requires Python 2.6.* or 2.7.*.
+# Date: 26 Aug 2016
+# Requires Python 3.
 
 """Functions for dealing with finite, simple graphs & graph isomorphism.
 
@@ -80,7 +80,7 @@ def powerset(iterable):
     """
     s = list(iterable)
     return itertools.chain.from_iterable( itertools.combinations(s, r)
-        for r in xrange(len(s)+1) )
+        for r in range(len(s)+1) )
 
 
 # _partition_perms - not part of public interface of module
@@ -100,7 +100,7 @@ def _partition_perms(parts, n):
 
     """
     if not parts:
-        yield range(n)
+        yield list(range(n))
         return
     prt = parts[0]
     if len(prt) <= 1:
@@ -110,7 +110,7 @@ def _partition_perms(parts, n):
     for baseperm in _partition_perms(parts[1:], n):
         for newperm in itertools.permutations(prt):
             p = baseperm[:]
-            for i in xrange(len(prt)):
+            for i in range(len(prt)):
                 p[prt[i]] = newperm[i]
             yield p
 
@@ -165,10 +165,10 @@ def is_graph(g):
             return False
 
     # Edges must be symmetric, and no loops
-    for v1 in xrange(n):
+    for v1 in range(n):
         if v1 in g[v1]:
             return False
-        for v2 in xrange(v1):
+        for v2 in range(v1):
             e12 = v2 in g[v1]
             e21 = v1 in g[v2]
             if e12 != e21:
@@ -190,13 +190,13 @@ def dot_str(g, graphname=None, maxlen=None):
 
     See beginning of this file for our graph representation.
 
-    >>> print dot_str([ [1,2], [0,2,3], [0,1,3], [1,2] ], "mygraph")
+    >>> print(dot_str([ [1,2], [0,2,3], [0,1,3], [1,2] ], "mygraph"))
     graph mygraph {
         1; 2; 3; 4;
         1 -- 2; 1 -- 3; 2 -- 3; 2 -- 4; 3 -- 4;
     }
 
-    >>> print dot_str([ [1], [0] ])
+    >>> print(dot_str([ [1], [0] ]))
     graph {
         1; 2;
         1 -- 2;
@@ -231,12 +231,12 @@ def dot_str(g, graphname=None, maxlen=None):
     sm = StringMaker(maxlen)
 
     # Add vertex labels
-    for i in xrange(len(g)):
+    for i in range(len(g)):
         sm.add_to_line(str(i+1) + ";")
     sm.new_line()
 
     # Add edges
-    for i in xrange(len(g)):
+    for i in range(len(g)):
         for j in g[i]:
             if i < j:
                 sm.add_to_line(str(i+1) + " -- " + str(j+1) + ";")
@@ -294,13 +294,13 @@ def graphs(n):
     # If b < c < a, then we yield edge (b,a) before (c,a).
     # As a result, we will construct graph representations having sorted
     # adjacency lists, which our graph representation requires.
-    alledges = ( (j, i) for i in xrange(n) for j in xrange(i) )
+    alledges = ( (j, i) for i in range(n) for j in range(i) )
 
     # Generate all graphs
     # We unroll the portion of the loop dealing with edges (0,1), (0,2)
     for edges in powerset(itertools.islice(alledges, 2, None)):
         # unrolling for edges (0,1) and (0,2)
-        g = [ [] for v in xrange(n) ]
+        g = [ [] for v in range(n) ]
         for e in edges:
             g[e[0]].append(e[1])
             g[e[1]].append(e[0])
@@ -361,7 +361,7 @@ def clique_number(g):
         and zero or more vertices with index v or higher.
 
         """
-        for x in xrange(v, n):  # Look for vert to add to clique s
+        for x in range(v, n):  # Look for vert to add to clique s
             for z in s:        # try all z in s to see if x is adjacent
                 if z not in g[x]:
                     break      # No - go to next x
@@ -384,6 +384,11 @@ def clique_number(g):
 # ----------------------------------------------------------------------
 # Graph Isomorphism Tools
 # ----------------------------------------------------------------------
+
+
+# Note: In this section we use an ad hoc algorithm here to determine
+# whether two graphs are isomorphic. Replacing this with some published
+# isomorphism algorithm would be a good idea.
 
 
 # _degree_verts - not part of public interface of module
@@ -419,9 +424,9 @@ def _degree_verts(g):
     """
     n = len(g)
     # degs = map(len, g) is a tiny bit slower than the following line
-    degs = [ len(g[v]) for v in xrange(n) ]
+    degs = [ len(g[v]) for v in range(n) ]
     dv = dict()
-    for v in xrange(n):
+    for v in range(n):
         degnbr = [0] * n
         for w in g[v]:
             degnbr[degs[w]] += 1
@@ -503,9 +508,9 @@ def isomorphic(g, h):
     # Try all permutations of the vertex set of graph g that take each
     # vertex to a vertex whose neighbors have the same degree sequence.
     n = len(g)
-    hsets = map(set, h)
-    for p in _partition_perms(gdv.values(), n):
-        for v in xrange(n):
+    hsets = list(map(set, h))
+    for p in _partition_perms(list(gdv.values()), n):
+        for v in range(n):
             if hsets[p[v]] != set([p[w] for w in g[v]]):
                 # A set comprehension would be nice above
                 break
@@ -541,12 +546,6 @@ def unique_iso(gs):
     # isomorphism of 2 graphs, given the graphs and their _degree_verts
     # output.
     def ck_iso(gc, gcdv, hc, hcdv):
-        # Note: for some applications, it can speed things up to check
-        # equality of orders here.
-        #n = len(gc)
-        #if n != len(hc):
-        #    return False
-
         # Compare nbr-degree sequences
         if len(gcdv) != len(hcdv):
             return False
@@ -561,9 +560,9 @@ def unique_iso(gs):
         # each vertex to a vertex whose neighbors have the same degree
         # sequence.
         n = len(gc)
-        hcsets = map(set, hc)
-        for p in _partition_perms(gcdv.values(), n):
-            for v in xrange(n):
+        hcsets = list(map(set, hc))
+        for p in _partition_perms(list(gcdv.values()), n):
+            for v in range(n):
                 if hcsets[p[v]] != set([p[w] for w in gc[v]]):
                     # A set comprehension would be nice above
                     break
@@ -605,7 +604,7 @@ def graphs_iso(n):
     [[[]]]
     >>> sorted(list(graphs_iso(2)))
     [[[], []], [[1], [0]]]
-    >>> [ len(list(graphs_iso(n))) for n in xrange(6) ]
+    >>> [ len(list(graphs_iso(n))) for n in range(6) ]
     [1, 1, 2, 4, 11, 34]
 
     """
@@ -626,13 +625,13 @@ def graphs_conn_iso(n):
     [[[]]]
     >>> list(graphs_conn_iso(2))
     [[[1], [0]]]
-    >>> [ len(list(graphs_conn_iso(n))) for n in xrange(7) ]
+    >>> [ len(list(graphs_conn_iso(n))) for n in range(7) ]
     [1, 1, 1, 2, 6, 21, 112]
 
     """
     def graphs_conn_helper(n):
         for oldg in graphs_conn_iso(n-1):
-            for s in powerset(xrange(n-1)):
+            for s in powerset(range(n-1)):
                 if s == ():
                     continue
                 g = oldg + [list(s)]
@@ -660,7 +659,8 @@ def graphs_conn_iso(n):
 
 
 def main(argv=None):
-    """Run doctests; verbose mode if argv[1] is "--Test"
+    """Run doctests; verbose mode if argv[1] is "--Test".
+    If argv is not given, then sys.argv is used.
 
     """
     if argv is None:
@@ -669,9 +669,9 @@ def main(argv=None):
     import doctest
     verbose = (len(argv) >= 2 and argv[1] == "--Test")
     if verbose:
-        print "Running doctests (verbose mode)"
+        print("Running doctests (verbose mode)")
     else:
-        print "Running doctests"
+        print("Running doctests")
     doctest.testmod(verbose=verbose)
     return 0
 

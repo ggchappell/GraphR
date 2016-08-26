@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # sparseramsey.py
 # Glenn G. Chappell
-# Date: 6 Jun 2015
-# Requires Python 2.6.* or 2.7.*.
+# Date: 26 Aug 2016
+# Requires Python 3.
 
 """Compute k-sparse Ramsey numbers & related extremal graphs.
 
@@ -26,7 +26,7 @@ then arguments k, a, b are ignored and may be omitted.
 --test       Run module tests (uses Python doctests), non-verbose mode.
 --Test       Run module tests, verbose mode.
 
-To call from a Python program (Py 2.6.* or 2.7.*), first do
+To call from a Python 3 program, first do
 
     import sparseramsey
 
@@ -266,24 +266,24 @@ def print_extremals(k, a, b, printflag=None):
     assert a >= 0
     assert b >= 0
 
-    print "Finding R_"+str(k)+"("+str(a)+","+str(b)+")"
-    print
+    print("Finding R_"+str(k)+"("+str(a)+","+str(b)+")")
+    print()
 
     n, gs = find_extremals(k, a, b, printflag)
 
     if printflag:
-        print
-    print len(gs), "extremal graph(s):"
-    print
+        print()
+    print(len(gs), "extremal graph(s):")
+    print()
     graphbasename = "r"+str(k)+"_"+str(a)+"_"+str(b)+"e"
     gcount = 0
     for g in gs:
         gcount += 1
         graphname = graphbasename + str(gcount)
-        print isograph.dot_str(g, graphname)
-        print
-    print "R_"+str(k)+"("+str(a)+","+str(b)+") = "+str(n)
-    print len(gs), "extremal graph(s)"
+        print(isograph.dot_str(g, graphname))
+        print()
+    print("R_"+str(k)+"("+str(a)+","+str(b)+") = "+str(n))
+    print(len(gs), "extremal graph(s)")
 
 
 # ----------------------------------------------------------------------
@@ -332,11 +332,11 @@ def main(argv=None):
         try:
             optlist, args = getopt.getopt(argv[1:], "hq",
                 ["help", "quiet", "test", "Test"])
-        except getopt.error, msg:
+        except getopt.error as msg:
             raise UsageError(msg)
         for o, a in optlist:
             if o in ["-h", "--help"]:
-                print __doc__,  # Usage message
+                print(__doc__, end="")  # Usage message
                 return 0
             elif o in ["-q", "--quiet"]:
                 printcounterexamples = False
@@ -344,9 +344,9 @@ def main(argv=None):
                 import doctest  # for testmod
                 verbose = (o == "--Test")
                 if verbose:
-                    print "Running doctests (verbose mode)"
+                    print("Running doctests (verbose mode)")
                 else:
-                    print "Running doctests"
+                    print("Running doctests")
                 doctest.testmod(verbose=verbose)
                 return 0
             else:
@@ -359,9 +359,9 @@ def main(argv=None):
             b = int(args[2])
         except:
             raise UsageError("Arguments must be integers")
-    except UsageError, err:
-        print >>sys.stderr, argv[0]+":", err.msg
-        print >>sys.stderr, "For help use --help"
+    except UsageError as err:
+        print(argv[0]+":", err.msg, file=sys.stderr)
+        print("For help use --help", file=sys.stderr)
         return 2
 
     print_extremals(k, a, b, printflag=printcounterexamples)

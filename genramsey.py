@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # genramsey.py
 # Glenn G. Chappell
-# Date: 25 Aug 2016
-# Requires Python 2.6.* or 2.7.*.
+# Date: 26 Aug 2016
+# Requires Python 3.
 
 """Functions for finding generalized Ramsey numbers & related extremal
 graphs.
@@ -179,7 +179,7 @@ def has_fset(f, b, g):
     if b > n:
         return False
 
-    for s in itertools.combinations(xrange(n), b):
+    for s in itertools.combinations(range(n), b):
         if f(g, s):
             return True
     return False
@@ -225,7 +225,7 @@ def has_fset_with_last(f, b, g):
     if b > n:
         return False
 
-    for ss in itertools.combinations(xrange(n-1), b-1):
+    for ss in itertools.combinations(range(n-1), b-1):
         s = ss + (n-1,)
         if f(g, s):
             return True
@@ -294,7 +294,7 @@ def _counterexamples_up(f1, f2, b1, b2, n, old):
     # 0 .. n-2 is an item in old.
     def counterexamples_up_big_list(f1, f2, n, b1, b2, old):
         for oldg in old:
-            for vset in isograph.powerset(xrange(n-1)):
+            for vset in isograph.powerset(range(n-1)):
                 g = oldg + [list(vset)]
                 for v in vset:
                     g[v] = g[v]+[n-1]
@@ -348,12 +348,12 @@ def extremals(f1, f2, b1, b2, printflag=None):
 
     """
     if printflag:
-        print "Order & number of counterexample graphs:"
+        print("Order & number of counterexample graphs:")
 
     gs = list(_counterexamples_zero(f1, f2, b1, b2))
     howmany = len(gs)
     if printflag:
-        print 0, howmany
+        print(0, howmany)
     if howmany == 0:
         return (0, [])
 
@@ -362,7 +362,7 @@ def extremals(f1, f2, b1, b2, printflag=None):
         gs = list(_counterexamples_up(f1, f2, b1, b2, n, oldgs))
         howmany = len(gs)
         if printflag:
-            print n, howmany
+            print(n, howmany)
         if howmany == 0:
             return (n, oldgs)
 
@@ -373,7 +373,8 @@ def extremals(f1, f2, b1, b2, printflag=None):
 
 
 def main(argv=None):
-    """Run doctests; verbose mode if argv[1] is "--Test"
+    """Run doctests; verbose mode if argv[1] is "--Test".
+    If argv is not given, then sys.argv is used.
 
     """
     if argv is None:
@@ -382,9 +383,9 @@ def main(argv=None):
     import doctest
     verbose = (len(argv) >= 2 and argv[1] == "--Test")
     if verbose:
-        print "Running doctests (verbose mode)"
+        print("Running doctests (verbose mode)")
     else:
-        print "Running doctests"
+        print("Running doctests")
     doctest.testmod(verbose=verbose)
     return 0
 

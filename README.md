@@ -1,9 +1,9 @@
 GraphR
 ======
 
-Python code for dealing with finite, simple graphs. Allows for
+Python 3 code for dealing with finite, simple graphs. Allows for
 computation of generalized Ramsey numbers and associated extremal
-graphs. Requires Python 2.6.* or 2.7.*.
+graphs.
 
 This package is a companion to the following papers by Glenn G. Chappell
 and John Gimbel:
@@ -31,8 +31,7 @@ interface.
 
 GraphR consists of two executable programs (`sparseramsey.py`,
 `dividedramsey.py`) and two importable libraries used by these
-(`isograph.py`, `genramsey.py`). All are intended for use with Python
-2.6.* or 2.7.*.
+(`isograph.py`, `genramsey.py`). All are intended for use with Python 3.
 
 To compute the _sparse Ramsey number_ R_k(a, b), run `sparseramsey.py`,
 passing k, a, b as command-line arguments.
